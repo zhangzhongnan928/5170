@@ -1,0 +1,74 @@
+---
+eip: 5170
+title: Decentralized Script Discovery for Non-ERC5169 Contracts
+description: A method to discover scripts associated with contracts that don't implement ERC-5169
+author: [Your Name] (@YourGitHubUsername)
+discussions-to: https://ethereum-magicians.org/t/eip-5170-decentralized-script-discovery-for-non-erc5169-contracts/[TBD]
+status: Draft
+type: Standards Track
+category: ERC
+created: 2024-06-29
+requires: 165
+---
+
+## Abstract
+
+This EIP proposes a decentralized method for user agents to discover scripts associated with contracts that don't implement ERC-5169. It aims to be blockchain-agnostic and does not require changes to existing contracts.
+
+## Motivation
+
+Many existing contracts don't implement ERC-5169 and cannot be easily updated. This EIP provides a way for user agents to discover scripts associated with these contracts, enabling enhanced functionality without modifying the original contracts or relying on centralized databases.
+
+## Specification
+
+The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119.
+
+### Script Discovery
+
+User agents SHOULD use the following method to discover scripts for a given contract address:
+
+1. First, attempt to call the `scriptURI()` function as defined in ERC-5169.
+
+2. If the contract does not implement ERC-5169, the user agent SHOULD construct a URI using the following format: ipfs://<IPFS_HASH_OF_CHAIN_ID>/<CONTRACT_ADDRESS> Where:
+- `<IPFS_HASH_OF_CHAIN_ID>` is the IPFS hash of the chain ID string
+- `<CONTRACT_ADDRESS>` is the lowercase hexadecimal address of the contract, without the '0x' prefix
+
+### Script Format
+
+The content at the constructed URI SHOULD be a JSON file with the following structure:
+
+```json
+{
+"scripts": [
+ {
+   "uri": "ipfs://<SCRIPT_HASH>",
+   "description": "Optional description of the script"
+ },
+ ...
+]
+}
+
+Multiple scripts MAY be listed in the "scripts" array.
+User Agent Behavior
+User agents SHOULD:
+
+Attempt to retrieve the script information from the constructed URI
+Present the available scripts to the user, if any are found
+Allow the user to choose whether to use a discovered script
+
+User agents MUST NOT automatically execute discovered scripts without user consent.
+Rationale
+This method provides a decentralized way to associate scripts with existing contracts across different EVM-compatible blockchains. By using IPFS, we avoid centralized databases and allow for community-driven script discovery and sharing.
+The use of chain ID in the URI structure allows for differentiation between contracts with the same address on different chains.
+Backwards Compatibility
+This ERC is fully backwards compatible as it does not require any changes to existing contracts. It provides an additional discovery mechanism that can be used alongside existing standards.
+Security Considerations
+
+User agents MUST treat discovered scripts as potentially untrusted and SHOULD implement appropriate safeguards.
+Users SHOULD be clearly informed that discovered scripts are not inherently verified or endorsed by the contract itself.
+The community SHOULD develop best practices for validating and verifying scripts discovered through this method.
+
+Copyright
+Copyright and related rights waived via CC0.
+
+
