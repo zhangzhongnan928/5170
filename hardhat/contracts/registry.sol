@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.26;
+pragma solidity ^0.8.24;
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract DecentralisedRegistry {
@@ -102,7 +102,7 @@ contract DecentralisedRegistry {
     ) public {
         require(
             msg.sender == Ownable(contractAddress).owner(),
-            "Owner or Delegate only"
+            "Contract Owner only"
         );
         require(
             getDelegateIndex(contractAddress, newSigner) < 0,
