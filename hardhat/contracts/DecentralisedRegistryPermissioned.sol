@@ -2,8 +2,9 @@
 
 pragma solidity ^0.8.24;
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./IRegistry.sol";
 
-contract DecentralisedRegistry {
+contract DecentralisedRegistryPermissioned is IDecentralisedRegistry {
     struct ScriptEntry {
         string[] scriptURIs;
         address[] delegateSigners; // list of authenticated addresses approved by owner
@@ -12,7 +13,6 @@ contract DecentralisedRegistry {
 
     mapping(address => ScriptEntry) private _scriptURIs;
 
-    event ScriptUpdate(address indexed contractAddress, string[]);
     event RegisterOwner(
         address indexed contractAddress,
         address indexed newOwner
@@ -42,7 +42,7 @@ contract DecentralisedRegistry {
             "Not authorized"
         );
 
-        emit ScriptUpdate(contractAddress, scriptURIList);
+        emit ScriptUpdate(contractAddress, msg.sender, scriptURIList);
         _scriptURIs[contractAddress].scriptURIs = scriptURIList;
     }
 

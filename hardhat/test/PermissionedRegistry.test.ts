@@ -18,7 +18,7 @@ async function deployInitialFixture() {
   await stakingToken.waitForDeployment();
 
   //Deploy registry contract
-  const Registry = (await ethers.getContractFactory("DecentralisedRegistry")).connect(
+  const Registry = (await ethers.getContractFactory("DecentralisedRegistryPermissioned")).connect(
     otherAccount
   );
   const registry = await Registry.deploy();
@@ -33,7 +33,7 @@ async function deployInitialFixture() {
   };
 }
 
-describe("DecentralisedRegistry", function () {
+describe("Decentralised Permissioned Registry", function () {
 
   it("mint and set scriptURI with owner", async function () {
     const {
@@ -57,13 +57,13 @@ describe("DecentralisedRegistry", function () {
     await expect(registry.connect(otherAccount).registerOwner(stakingToken.target))
       .to.revertedWith("Not authorized");
 
-    const scriptURI = [scriptURI1];  
+    const scriptURI = [scriptURI1];
 
     //set scriptURI
     await expect(registry.connect(otherAccount).setScriptURI(stakingToken.target, scriptURI))
       .to.revertedWith("Not authorized");
     await expect(registry.connect(otherAccount2).setScriptURI(stakingToken.target, scriptURI))
-      .to.revertedWith("Not authorized");  
+      .to.revertedWith("Not authorized");
 
     await registry.connect(owner).setScriptURI(stakingToken.target, scriptURI);
 
