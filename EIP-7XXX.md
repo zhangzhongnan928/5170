@@ -143,7 +143,7 @@ contract DecentralisedRegistry is IDecentralisedRegistry {
 
 ### Test Case
 
-HardHat test for the above can be found at the GitHub link.
+HardHat test harness for the above can be found at the GitHub link here: https://github.com/zhangzhongnan928/5170
 ```
 
 ## Copyright
