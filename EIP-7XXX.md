@@ -1,7 +1,7 @@
 ---
 eip: 7xxx
-title: Permissionless SmartToken Registry
-description: Permissionless registry for smart token scripts
+title: Permissionless Client Script Registry
+description: Permissionless registry to fetch executable client scripts for contracts
 author: Victor Zhang (@zhangzhongnan928) James Brown (@JamesSmartCell)
 discussions-to: https://ethereum-magicians.org/t/eip-xxxx-permissionless-registry
 status: Draft
@@ -17,9 +17,9 @@ This EIP provides a means to create a standard registry for locating executable 
 
 ## Motivation
 
-[ERC-5169](https://github.com/ethereum/ERCs/blob/master/ERCS/erc-5169.md) (`scriptURI`) provides a client script lookup method for contracts. ERC-5169 requires the contract to have implemented that interface at the time of construction (or allow an upgrade path).
+[ERC-5169](https://github.com/ethereum/ERCs/blob/master/ERCS/erc-5169.md) (`scriptURI`) provides a client script lookup method for contracts. This requires the contract to have implemented the ERC-5169 interface at the time of construction (or allow an upgrade path).
 
-This proposal outlines a method similar to the ENS system, which provides a contract that allows various methods of supplying debug and certified scripts.
+This proposal outlines a contract that can supply prototype and certified scripts. The contract would be a singleton instance multichain that would be deployed at identical addresses on supported chains.
 
 ### Overview
 
@@ -68,6 +68,15 @@ For example see the Test Case below
 ## Rationale
 
 This method allows contracts written without the ERC-5169 interface to associate scripts with themselves, and avoids the need for a centralised online server, with subsequent need for security and the requires an organisation to become a gatekeeper for the database.
+
+## Example
+
+This method could be used to locate a TokenScript for the ENS NFT. Initially, script proposers would write their script, then send a transaction to the registry contract:
+
+```ts
+await registry.connect(myAccount).setScriptURI(<ENS NFT Address>, ["ipfs://QmS0me1PF5Add7e55..."]);
+```
+The script pointed to could contain instructions on how to show renewal date, renewal prices and contain instructions on how the wallet can create the transaction to renew the ENS domain.
 
 ### Test Contract
 
